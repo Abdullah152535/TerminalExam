@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     View,
     Text,
@@ -8,11 +8,16 @@ import { updateUserActivity } from '../../UpdateActivity';
 import { useState,useEffect } from 'react';
 
 import { useIsFocused } from '@react-navigation/native';
-
+import { ThemeContext } from '../../context/themecontext';
 
 const Home = (navigation) => {
 
     const isFocused = useIsFocused();
+
+    const color = useContext(ThemeContext);
+
+    const [bgcolor,setbgcolor] =useState(color);
+
 
     useEffect(()=>{
         if (isFocused) {
@@ -22,7 +27,7 @@ const Home = (navigation) => {
     },[isFocused])
     return (
         
-       <SafeAreaView>
+       <SafeAreaView style={{backgroundColor:{bgcolor}}}>
          <View>
             
             <Text>Home</Text>

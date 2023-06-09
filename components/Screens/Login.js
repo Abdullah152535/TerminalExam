@@ -7,17 +7,36 @@ import {
     FlatList,
     Image
 } from 'react-native';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {doc , getDocs , collection,addDoc, } from "firebase/firestore";
 import { db } from '../../firebase';
 import { Platform } from 'react-native';
-import { globalTheme } from '../../App';
 import { updateUserActivity } from '../../UpdateActivity';
 import { useIsFocused } from '@react-navigation/native';
+import { ThemeContext } from '../../context/themecontext';
 
 
 const Login = ({navigation}) => {
+
+    const [bg,setbg]= useState("white");
+
+    const getTheme = async () => {
+        const docRef = doc(db, "theme", "mode");
+        try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const themeData = docSnap.data().theme;
+                setbg(themeData === 'white' ? 'black' : 'white');
+
+                console.log("Document data:", docSnap.data());
+            } else {
+                console.log("No such document!");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
             //state variable
 
@@ -109,6 +128,21 @@ const Login = ({navigation}) => {
                     >
                         <Text style={{fontWeight:"bold"}}>GO to Home Screen</Text>
                     </TouchableOpacity>
+                    
+                    <TouchableOpacity style={{borderWidth:2, borderRadius:15, width:200,height:60 , justifyContent:"center",alignItems:"center",marginTop:40}}
+                       onPress={() => {
+                         getTheme();
+                      }}
+                    >
+                        <Text style={{fontWeight:"bold"}}>get theme color</Text>
+                    </TouchableOpacity>
+
+                    <View>
+
+                        <Text style={{fontSize:28}}>
+                            {bg}
+                        </Text>
+                    </View>
 
                   
         </View>
