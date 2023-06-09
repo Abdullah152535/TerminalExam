@@ -12,8 +12,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {doc , getDocs , collection,addDoc, } from "firebase/firestore";
 import { db } from '../../firebase';
 import { Platform } from 'react-native';
-
+import { globalTheme } from '../../App';
 import { updateUserActivity } from '../../UpdateActivity';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const Login = ({navigation}) => {
 
@@ -23,9 +25,13 @@ const Login = ({navigation}) => {
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState(null);
 
+            const isFocused = useIsFocused();
             useEffect(()=>{
-                updateUserActivity("Login");
-            })
+                if (isFocused) {
+                    updateUserActivity('Login');
+                   
+                  }
+            },[isFocused])
             
 
             //Question
@@ -103,6 +109,8 @@ const Login = ({navigation}) => {
                     >
                         <Text style={{fontWeight:"bold"}}>GO to Home Screen</Text>
                     </TouchableOpacity>
+
+                  
         </View>
        </SafeAreaView>
     )

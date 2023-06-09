@@ -6,11 +6,20 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateUserActivity } from '../../UpdateActivity';
 import { useState,useEffect } from 'react';
+
+import { useIsFocused } from '@react-navigation/native';
+
+
 const Home = (navigation) => {
 
+    const isFocused = useIsFocused();
+
     useEffect(()=>{
-        updateUserActivity("Home");
-    })
+        if (isFocused) {
+            updateUserActivity('Home');
+           
+          }
+    },[isFocused])
     return (
         
        <SafeAreaView>
