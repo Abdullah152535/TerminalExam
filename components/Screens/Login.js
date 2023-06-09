@@ -9,33 +9,52 @@ import {
 } from 'react-native';
 import { useState,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {doc , getDocs , collection,addDoc } from "firebase/firestore";
+import {doc , getDocs , collection,addDoc, } from "firebase/firestore";
 import { db } from '../../firebase';
 import { Platform } from 'react-native';
 
+import { updateUserActivity } from '../../UpdateActivity';
 
 const Login = ({navigation}) => {
 
-    
-    
+            //state variable
+
             const [data, setData] = useState([]);
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState(null);
 
-            const addData = async () => {
+            useEffect(()=>{
+                updateUserActivity("Login");
+            })
+            
+
+            //Question
+              const os = {
+                os:Platform.OS
+              };
+              
+            //   console.log(os);
+            
+            const addOSData = async () => {
                 try {
-                    const collectionRef = collection(db, 'Data'); // Replace 'items' with the actual name of your collection
+                    const collectionRef = collection(db, 'OSinfo'); // Replace 'items' with the actual name of your collection
                 
-                    for (const item of dummyData) {
-                      const docRef = await addDoc(collectionRef, item);
+                   
+                      const docRef = await addDoc(collectionRef, os);
                       console.log('Document added with ID:', docRef.id);
-                    }
+                    
                   } catch (error) {
                     console.error('Error adding documents:', error);
                   }
               };
               
-             
+              
+             useEffect(()=>{
+                addOSData();
+             },[])
+
+
+            //fetching data from flatlist 
 
             useEffect(() => {
     
@@ -56,7 +75,7 @@ const Login = ({navigation}) => {
                 }
             
                 fetchData();
-                console.log(data)
+                // console.log(data)
               },[]);
             
 
@@ -66,7 +85,7 @@ const Login = ({navigation}) => {
                     <Text style={{fontSize:24,marginTop:25,fontWeight:"bold"}}>Data From Firebase </Text>
 
             
-                 
+                 {/* rendering flatlist of data fetched from firestore */}
                  <FlatList
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
@@ -77,6 +96,13 @@ const Login = ({navigation}) => {
                     keyExtractor={(item) => item.key}
                     />
 
+                    <TouchableOpacity style={{borderWidth:2, borderRadius:15, width:200,height:60 , justifyContent:"center",alignItems:"center"}}
+                       onPress={() => {
+                        navigation.navigate("Tabs");
+                      }}
+                    >
+                        <Text style={{fontWeight:"bold"}}>GO to Home Screen</Text>
+                    </TouchableOpacity>
         </View>
        </SafeAreaView>
     )
@@ -112,3 +138,19 @@ const styles = StyleSheet.create(
 )
 
 export {Login};
+
+
+
+
+   // const addData = async () => {
+            //     try {
+            //         const collectionRef = collection(db, 'Data'); // Replace 'items' with the actual name of your collection
+                
+            //         for (const item of dummyData) {
+            //           const docRef = await addDoc(collectionRef, item);
+            //           console.log('Document added with ID:', docRef.id);
+            //         }
+            //       } catch (error) {
+            //         console.error('Error adding documents:', error);
+            //       }
+            //   };
